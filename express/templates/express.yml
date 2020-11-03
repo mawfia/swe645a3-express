@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: express-service
+  labels:
+    app: express-angular
+spec:
+  type: NodePort
+  ports:
+    - port: 3000
+      nodePort: 30000
+      targetPort: 3000
+  selector:
+    app: express
+    tier: backend
+  clusterIP: 10.100.124.249
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: express
+spec:
+  selector:
+    matchLabels:
+      app: express
+      tier: backend
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: express
+        tier: backend
+    spec:
+      containers:
+        - name: express
+          image: mawfia/express:{{ .Values.version | default 1.0 }}
+          ports:
+            - name: express
+              containerPort: 3000
