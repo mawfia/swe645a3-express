@@ -37,7 +37,8 @@ app.get('/proxy/test_api', (req, res) => {
       try {
           const response = await got.get(`${api}/test`);
           //console.log(response.body);
-          res.status(200).json(JSON.parse(response.body));
+          //res.status(200).send(response.body);
+          res.status(200).json({'api response' : response.body});
           //=> '<!doctype html> ...'
       } catch (error) {
           console.log(error.response.body);
