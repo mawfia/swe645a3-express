@@ -12,6 +12,7 @@ app.use(cors());
 
 const api = process.env.PROD ? "http://10.100.113.23:8080/swe645a3/api" : "http://localhost:8080/swe645a3/api";
 
+
 app.get('/proxy/surveys', (req, res) => {
   (async () => {
       try {
@@ -22,6 +23,27 @@ app.get('/proxy/surveys', (req, res) => {
       } catch (error) {
           console.log(error.response.body);
           return res.status(500).json({ type: 'error', message: error.response.body });
+          //=> 'Internal server error ...'
+      }
+  })();
+
+});
+
+app.post('/proxy/create', (req, res) => {
+
+  //console.log(req.body.survey);
+
+  (async () => {
+      try {
+          const response = await got.post(`${api}/survey`, {json: req.body.survey, responseType: 'json'});
+          //console.log(response.body);
+          //return res.json({"success":response.body});
+          return res.status(200).json(response.body);
+          //return;
+          //return res.status(200).json({success:"Survey created"});
+      } catch (error) {
+          console.log(error.response.body);
+          return res.status(500).json({ error: error.response.body });
           //=> 'Internal server error ...'
       }
   })();
@@ -62,8 +84,6 @@ app.post('/proxy/survey', (req, res) => {
           //=> 'Internal server error ...'
       }
   })();
-
-  //res.status(200);
 
 });
 
